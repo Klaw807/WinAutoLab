@@ -41,6 +41,22 @@ MOUSEEVENTF_MOVE = 0x0001
 MOUSEEVENTF_LEFTDOWN = 0x0002
 MOUSEEVENTF_LEFTUP = 0x0004
 MOUSEEVENTF_ABSOLUTE = 0x8000
+MOUSEEVENTF_VIRTUALDESK = 0x4000
+
+
+def enable_dpi_awareness() -> None:
+    """Prefer physical-pixel coordinates so capture and playback match on scaled displays."""
+    user32 = ctypes.windll.user32
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        return
+    except (AttributeError, OSError):
+        pass
+
+    try:
+        user32.SetProcessDPIAware()
+    except (AttributeError, OSError):
+        pass
 
 
 def load_points_from_json(path: str | Path) -> list[ClickPoint]:
@@ -51,8 +67,10 @@ def load_points_from_json(path: str | Path) -> list[ClickPoint]:
 
 def to_absolute(x: int, y: int, screen_width: int, screen_height: int) -> tuple[int, int]:
     """Convert screen coordinates to the absolute SendInput coordinate space."""
-    abs_x = int(x * 65535 / screen_width)
-    abs_y = int(y * 65535 / screen_height)
+    if screen_width <= 1 or screen_height <= 1:
+        raise ValueError("screen dimensions must be greater than 1 pixel")
+    abs_x = round(x * 65535 / (screen_width - 1))
+    abs_y = round(y * 65535 / (screen_height - 1))
     return abs_x, abs_y
 
 
@@ -60,22 +78,32 @@ def preview_points(points: Sequence[ClickPoint], duration_ms: int | None = None)
     if tk is None:
         raise RuntimeError("tkinter is required for preview mode")
 
+    enable_dpi_awareness()
     root = tk.Tk()
     root.attributes("-fullscreen", True)
     root.attributes("-topmost", True)
     root.attributes("-alpha", 0.35)
     root.configure(bg="black")
+    try:
+        root.tk.call("tk", "scaling", 1.0)
+    except tk.TclError:
+        pass
 
     canvas = tk.Canvas(root, bg="black", highlightthickness=0)
     canvas.pack(fill="both", expand=True)
 
+    marker_radius = 24
+    index_font = ("Arial", 24, "bold")
+    coordinate_font = ("Arial", 14)
+    coordinate_offset = 46
+    header_font = ("Arial", 20, "bold")
+
     for idx, point in enumerate(points, start=1):
-        radius = 18
         canvas.create_oval(
-            point.x - radius,
-            point.y - radius,
-            point.x + radius,
-            point.y + radius,
+            point.x - marker_radius,
+            point.y - marker_radius,
+            point.x + marker_radius,
+            point.y + marker_radius,
             outline="red",
             width=4,
         )
@@ -84,14 +112,14 @@ def preview_points(points: Sequence[ClickPoint], duration_ms: int | None = None)
             point.y,
             text=str(idx),
             fill="white",
-            font=("Arial", 18, "bold"),
+            font=index_font,
         )
         canvas.create_text(
             point.x,
-            point.y + 35,
+            point.y + coordinate_offset,
             text=f"({point.x}, {point.y})",
             fill="yellow",
-            font=("Arial", 11),
+            font=coordinate_font,
         )
 
     canvas.create_text(
@@ -100,7 +128,7 @@ def preview_points(points: Sequence[ClickPoint], duration_ms: int | None = None)
         anchor="nw",
         text="Preview mode: red circles are click points. Press Esc or click to continue.",
         fill="white",
-        font=("Arial", 16, "bold"),
+        font=header_font,
     )
 
     root.bind("<Escape>", lambda event: root.destroy())
@@ -123,7 +151,7 @@ def build_click_batch(
                     abs_x,
                     abs_y,
                     0,
-                    MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+                    MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                     0,
                     0,
                 ),
@@ -152,8 +180,17 @@ def send_click_batch(batch: ctypes.Array) -> None:
 
 
 def get_screen_size() -> tuple[int, int]:
+    enable_dpi_awareness()
     user32 = ctypes.windll.user32
     return user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+
+
+def get_cursor_position() -> ClickPoint:
+    enable_dpi_awareness()
+    point = wintypes.POINT()
+    if not ctypes.windll.user32.GetCursorPos(ctypes.byref(point)):
+        raise ctypes.WinError()
+    return ClickPoint(point.x, point.y)
 
 
 def run_scheduled_clicks(
@@ -181,4 +218,3 @@ def run_scheduled_clicks(
             print(f"Triggered clicks at {datetime.now().strftime('%H:%M:%S.%f')[:-3]}")
             return
         time.sleep(poll_interval_seconds)
-

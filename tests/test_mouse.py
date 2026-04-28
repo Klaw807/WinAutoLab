@@ -12,7 +12,11 @@ SPEC.loader.exec_module(run_mouse_clicks)
 
 
 def test_to_absolute_uses_sendinput_coordinate_space():
-    assert to_absolute(960, 540, 1920, 1080) == (32767, 32767)
+    assert to_absolute(0, 0, 1920, 1080) == (0, 0)
+
+
+def test_to_absolute_maps_bottom_right_to_sendinput_max():
+    assert to_absolute(1919, 1079, 1920, 1080) == (65535, 65535)
 
 
 def test_build_click_batch_creates_move_down_up_per_point():
