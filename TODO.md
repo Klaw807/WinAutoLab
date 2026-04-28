@@ -8,13 +8,6 @@ Transition WinAutoLab into implementation mode for project-owned Windows automat
 
 ## High Priority
 
-- [x] T001 Migrate legacy automation logic into project structure
-  where: `src/`, `tests/`
-  done_when: legacy reusable logic is moved into project-owned modules with tests and no source-repo edits
-  owner: agent
-  details: `docs/plans/archive/2026/2026-04-28_T001_migrate_legacy_automation_logic.md`
-  history: `docs/plans/history/2026/2026-04-28_T001_migrate_legacy_automation_logic.md`
-
 - [x] T002 Add first project-specific automation entrypoint
   where: `scripts/`
   done_when: one runnable automation script is checked in with any needed config
@@ -37,7 +30,6 @@ Transition WinAutoLab into implementation mode for project-owned Windows automat
 
 # Recently Done
 
-- [x] T001 Migrate legacy automation logic into project structure
 - [x] T002 Add first project-specific automation entrypoint
 - [x] T000 Transition workspace to implementation mode
 

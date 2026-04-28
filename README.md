@@ -2,8 +2,6 @@
 
 Project-owned workspace for Windows automation scripts, mouse/input simulation, web or data scraping, and temporary script experiments.
 
-This repository is the maintained project-owned home for automation logic that previously lived in the ad hoc folder `C:\Users\yangyx\OneDrive\01_working\16_code_[B]`. The source folder is treated as legacy reference only and is not modified by work here.
-
 Examples:
 
 - Shanghaitech badminton form autofill
@@ -41,7 +39,7 @@ WinAutoLab/
 - Use `docs/plans/` only when a task needs a larger implementation plan
 - Keep docs short and update them when the workspace behavior changes
 
-## Migrated Automation Entry Points
+## Automation Entry Points
 
 - `python scripts/run_mouse_clicks.py configs/mouse_points.example.json --time 12:00:00`
 - `python scripts/show_mouse_position.py --delay 3`
