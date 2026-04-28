@@ -1,0 +1,22 @@
+{
+  "start_url": "https://example.com/login",
+  "username": "replace-me",
+  "password": "replace-me",
+  "username_selector": "#username",
+  "password_selector": "#password",
+  "submit_selector": "#login_submit",
+  "post_login_urls": [
+    "https://example.com/form"
+  ],
+  "actions": [
+    {
+      "type": "set_value",
+      "selector": "#field31884",
+      "value": "3"
+    },
+    {
+      "type": "script",
+      "code": "document.querySelector('#field31902_browserbtn').click();"
+    }
+  ]
+}
