@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RUNNER_TEMPLATE="${ROOT_DIR}/runner_template.sh"
+WORKFLOW_DIR="${ROOT_DIR}/../agent-workflow"
+AGENTS_TEMPLATE="${WORKFLOW_DIR}/templates/experiment_AGENTS_template.md"
+README_TEMPLATE="${WORKFLOW_DIR}/templates/experiment_README_template.md"
+TODO_GUIDE_SOURCE="${WORKFLOW_DIR}/TODO_GUIDE.md"
+TODO_TEMPLATE_SOURCE="${WORKFLOW_DIR}/TODO_TEMPLATE.md"
+
+read -r -p "Experiment name: " RAW_NAME
+
+NORMALIZED_NAME="$(printf '%s' "$RAW_NAME" \
+  | tr '[:upper:]' '[:lower:]' \
+  | sed -E 's/[^a-z0-9]+/_/g; s/^_+//; s/_+$//; s/_+/_/g')"
+
+if [[ -z "$NORMALIZED_NAME" ]]; then
+  echo "Experiment name cannot be empty."
+  exit 1
+fi
+
+EXPERIMENT_ID="$(date +%F)_${NORMALIZED_NAME}"
+EXPERIMENT_DIR="${ROOT_DIR}/${EXPERIMENT_ID}"
+
+if [[ -e "$EXPERIMENT_DIR" ]]; then
+  echo "Experiment already exists: ${EXPERIMENT_ID}"
+  exit 1
+fi
+
+if [[ ! -f "$RUNNER_TEMPLATE" ]]; then
+  echo "Runner template not found: ${RUNNER_TEMPLATE}"
+  exit 1
+fi
+
+if [[ ! -f "$AGENTS_TEMPLATE" ]]; then
+  echo "Experiment AGENTS template not found: ${AGENTS_TEMPLATE}"
+  exit 1
+fi
+
+if [[ ! -f "$README_TEMPLATE" ]]; then
+  echo "Experiment README template not found: ${README_TEMPLATE}"
+  exit 1
+fi
+
+if [[ ! -f "$TODO_GUIDE_SOURCE" ]]; then
+  echo "Shared TODO guide not found: ${TODO_GUIDE_SOURCE}"
+  exit 1
+fi
+
+if [[ ! -f "$TODO_TEMPLATE_SOURCE" ]]; then
+  echo "Shared TODO template not found: ${TODO_TEMPLATE_SOURCE}"
+  exit 1
+fi
+
+mkdir -p \
+  "${EXPERIMENT_DIR}/configs" \
+  "${EXPERIMENT_DIR}/results" \
+  "${EXPERIMENT_DIR}/logs" \
+  "${EXPERIMENT_DIR}/runner_lib"
+
+cp "$RUNNER_TEMPLATE" "${EXPERIMENT_DIR}/runner.sh"
+cp "$AGENTS_TEMPLATE" "${EXPERIMENT_DIR}/AGENTS.md"
+cp "$README_TEMPLATE" "${EXPERIMENT_DIR}/README.md"
+cp "$TODO_GUIDE_SOURCE" "${EXPERIMENT_DIR}/TODO_GUIDE.md"
+cp "$TODO_TEMPLATE_SOURCE" "${EXPERIMENT_DIR}/TODO_TEMPLATE.md"
+chmod +x "${EXPERIMENT_DIR}/runner.sh"
+
+echo "Created ${EXPERIMENT_ID}"
+echo "  - ${EXPERIMENT_ID}/AGENTS.md"
+echo "  - ${EXPERIMENT_ID}/README.md"
+echo "  - ${EXPERIMENT_ID}/TODO_GUIDE.md"
+echo "  - ${EXPERIMENT_ID}/TODO_TEMPLATE.md"
+echo "  - ${EXPERIMENT_ID}/runner.sh"
+echo "  - ${EXPERIMENT_ID}/configs"
+echo "  - ${EXPERIMENT_ID}/results"
+echo "  - ${EXPERIMENT_ID}/logs"
+echo "  - ${EXPERIMENT_ID}/runner_lib"

@@ -1,0 +1,6 @@
+[submodule "toolkit"]
+	path = toolkit
+	url = git@github.com:Klaw807/toolkit.git
+[submodule "agent-workflow"]
+	path = agent-workflow
+	url = git@github.com:Klaw807/agent-workflow.git
