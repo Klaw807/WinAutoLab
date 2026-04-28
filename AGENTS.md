@@ -2,7 +2,7 @@
 
 When using an agent for help, add prefix "Use AGENTS.md as the guide of your following work" to your conversation.
 
-This root file is the primary instruction file for this workspace. Follow this agent workflow every time you work here.
+This workspace is now in implementation mode. Treat the root as the home for project-owned code and keep `repos/` only for upstream, external, forked, or submodule code.
 
 Before modifying the workspace, read:
 - [README.md](README.md) - workspace purpose and structure
@@ -16,6 +16,10 @@ Use `TODO.md` for current workspace task state, and follow `agent-workflow/TODO_
 
 ## Ownership Rules
 
+- Keep project-owned implementation in `src/`
+- Keep project-owned tests in `tests/`
+- Keep project-specific automation in `scripts/`
+- Keep checked-in project configuration in `configs/`
 - Keep reusable utilities in `toolkit/`
 - Keep reusable workflow rules and scaffolding in `agent-workflow/`
 - Keep external repos in `repos/`
