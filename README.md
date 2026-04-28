@@ -45,6 +45,7 @@ WinAutoLab/
 
 ## Automation Entry Points
 
+- `python scripts/run_mouse_clicks.py --time 12:00:00`
 - `python scripts/run_mouse_clicks.py configs/mouse_points.example.json --time 12:00:00`
 - `python scripts/show_mouse_position.py --delay 3`
 - `python scripts/download_page_images.py https://example.com/page --output downloaded_images`
