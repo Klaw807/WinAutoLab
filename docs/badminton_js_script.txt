@@ -1,0 +1,15 @@
+// Chrome DevTools helper for the ShanghaiTech badminton form.
+// Usage:
+// 1. Open the target page in Chrome.
+// 2. Press F12 and open the Console tab.
+// 3. Paste this file's contents and run it to prefill the form fields.
+// 4. The last two lines click the picker buttons on the page.
+
+document.querySelector('select#field32340').value = "4";
+document.querySelector('input#field31884[datatype="text"]').value = "1";
+document.querySelector('select#field31885').value = "0";
+document.querySelector('input#field31888[datatype="text"]').value = "0";
+document.querySelector('input#field31889[datatype="text"]').value = "0";
+document.querySelector('select#field31892').value = "1";
+document.querySelector("#field31902_browserbtn").click();
+document.querySelector("#field31901browser").click();

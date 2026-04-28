@@ -39,6 +39,10 @@ WinAutoLab/
 - Use `docs/plans/` only when a task needs a larger implementation plan
 - Keep docs short and update them when the workspace behavior changes
 
+## Docs
+
+- `docs/badminton_js_script.txt`: copy-paste JavaScript for the Chrome DevTools console to help prefill the Shanghaitech badminton form
+
 ## Automation Entry Points
 
 - `python scripts/run_mouse_clicks.py configs/mouse_points.example.json --time 12:00:00`
