@@ -197,7 +197,7 @@ def run_scheduled_clicks(
     points: Sequence[ClickPoint],
     target_time: str,
     repeat_count: int = 3,
-    repeat_interval_seconds: float = 0.02,
+    repeat_interval_seconds: float = 0.005,
     poll_interval_seconds: float = 0.001,
     preview: bool = True,
 ) -> None:

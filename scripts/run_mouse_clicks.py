@@ -23,7 +23,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--time", default="12:00:00", help="Trigger time in HH:MM:SS")
     parser.add_argument("--repeat-count", type=int, default=3)
-    parser.add_argument("--repeat-interval", type=float, default=0.02)
+    parser.add_argument("--repeat-interval", type=float, default=0.005)
     parser.add_argument("--no-preview", action="store_true")
     return parser
 
