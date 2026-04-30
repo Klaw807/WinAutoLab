@@ -8,12 +8,6 @@ Transition WinAutoLab into implementation mode for project-owned Windows automat
 
 ## High Priority
 
-- [x] T002 Add first project-specific automation entrypoint
-  where: `scripts/`
-  done_when: one runnable automation script is checked in with any needed config
-  owner: shared
-  details: `docs/plans/history/2026/2026-04-28_T002_add_first_project_specific_automation_entrypoint.md`
-
 ---
 
 # Backlog
@@ -30,6 +24,7 @@ Transition WinAutoLab into implementation mode for project-owned Windows automat
 
 # Recently Done
 
+- [x] T011 Add a real click-emulation verification test
 - [x] T002 Add first project-specific automation entrypoint
 - [x] T000 Transition workspace to implementation mode
 
